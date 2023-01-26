@@ -20,6 +20,7 @@ const filters = require('../utils/filters');
 
 module.exports.createPost = async (req, res, next) => {
   const user = res.locals.user;
+  let response = undefined;
   const { caption, filter: filterName } = req.body;
   let post = undefined;
   const filterObject = filters.find((filter) => filter.name === filterName);
@@ -43,12 +44,13 @@ module.exports.createPost = async (req, res, next) => {
   });
 
   try {
-    const response = await cloudinary.uploader.upload(req.file.path);
+    response = await cloudinary.uploader.upload(req.file.path);
   } catch {
     return next({ message: 'Error uploading image, please try again later.' });
   }
 
   try {
+    /*
     const moderationResponse = await axios.get(
       `https://api.moderatecontent.com/moderate/?key=${process.env.MODERATECONTENT_API_KEY}&url=${response.secure_url}`
     );
@@ -63,7 +65,7 @@ module.exports.createPost = async (req, res, next) => {
       return res.status(403).send({
         error: 'The content was deemed too explicit to upload.',
       });
-    }
+    }*/
 
     const thumbnailUrl = formatCloudinaryUrl(
       response.secure_url,
