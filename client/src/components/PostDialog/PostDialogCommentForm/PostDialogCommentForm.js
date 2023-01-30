@@ -169,6 +169,7 @@ const PostDialogCommentForm = ({
         <SearchSuggestion
           fetching={fetching}
           result={result}
+          token={token}
           username={mention}
           onClick={(user) => {
             let comment = commentInputRef.current.value;

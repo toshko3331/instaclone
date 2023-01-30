@@ -63,7 +63,7 @@ const FollowButton = ({
                   onClick: () => follow(),
                 },
               ],
-              children: <UnfollowPrompt avatar={avatar} username={username} />,
+              children: <UnfollowPrompt avatar={avatar} token={token} username={username} />,
             },
             'OptionsDialog/OptionsDialog'
           )

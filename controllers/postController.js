@@ -1,6 +1,8 @@
-const cloudinary = require('cloudinary').v2;
 const linkify = require('linkifyjs');
 const axios = require('axios');
+const eis = require('express-image-server-fixed');
+const fs = require('fs');
+const path = require('path');
 require('linkifyjs/plugins/hashtag')(linkify);
 const Post = require('../models/Post');
 const PostVote = require('../models/PostVote');
@@ -8,19 +10,16 @@ const Following = require('../models/Following');
 const Followers = require('../models/Followers');
 const Notification = require('../models/Notification');
 const socketHandler = require('../handlers/socketHandler');
-const fs = require('fs');
 const ObjectId = require('mongoose').Types.ObjectId;
 
 const {
   retrieveComments,
-  formatCloudinaryUrl,
   populatePostsPipeline,
 } = require('../utils/controllerUtils');
 const filters = require('../utils/filters');
 
 module.exports.createPost = async (req, res, next) => {
   const user = res.locals.user;
-  let response = undefined;
   const { caption, filter: filterName } = req.body;
   let post = undefined;
   const filterObject = filters.find((filter) => filter.name === filterName);
@@ -37,48 +36,9 @@ module.exports.createPost = async (req, res, next) => {
       .send({ error: 'Please provide the image to upload.' });
   }
 
-  cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET,
-  });
-
   try {
-    response = await cloudinary.uploader.upload(req.file.path);
-  } catch {
-    return next({ message: 'Error uploading image, please try again later.' });
-  }
-
-  try {
-    /*
-    const moderationResponse = await axios.get(
-      `https://api.moderatecontent.com/moderate/?key=${process.env.MODERATECONTENT_API_KEY}&url=${response.secure_url}`
-    );
-
-    if (moderationResponse.data.error) {
-      return res
-        .status(500)
-        .send({ error: 'Error moderating image, please try again later.' });
-    }
-
-    if (moderationResponse.data.rating_index > 2) {
-      return res.status(403).send({
-        error: 'The content was deemed too explicit to upload.',
-      });
-    }*/
-
-    const thumbnailUrl = formatCloudinaryUrl(
-      response.secure_url,
-      {
-        width: 400,
-        height: 400,
-      },
-      true
-    );
-    fs.unlinkSync(req.file.path);
     post = new Post({
-      image: response.secure_url,
-      thumbnail: thumbnailUrl,
+      image: req.file.filename,
       filter: filterObject ? filterObject.filter : '',
       caption,
       author: user._id,
@@ -142,6 +102,7 @@ module.exports.deletePost = async (req, res, next) => {
     if (!postDelete.deletedCount) {
       return res.status(500).send({ error: 'Could not delete the post.' });
     }
+    fs.unlinkSync(process.env.MEDIA_STORAGE_PATH + post.image);
     res.status(204).send();
   } catch (err) {
     next(err);
@@ -240,15 +201,6 @@ module.exports.votePost = async (req, res, next) => {
       // Sending a like notification
       const post = await Post.findById(postId);
       if (String(post.author) !== String(user._id)) {
-        // Create thumbnail link
-        const image = formatCloudinaryUrl(
-          post.image,
-          {
-            height: 50,
-            width: 50,
-          },
-          true
-        );
         const notification = new Notification({
           sender: user._id,
           receiver: post.author,
@@ -256,7 +208,7 @@ module.exports.votePost = async (req, res, next) => {
           date: Date.now(),
           notificationData: {
             postId,
-            image,
+            image: post.image,
             filter: post.filter,
           },
         });

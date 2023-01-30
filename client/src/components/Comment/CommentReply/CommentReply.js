@@ -91,6 +91,7 @@ const CommentReply = ({
       >
         <Avatar
           size="4rem"
+          token={token}
           imageSrc={comment.author.avatar}
           className="avatar--small"
         />

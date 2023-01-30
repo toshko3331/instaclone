@@ -16,7 +16,7 @@ import NotificationButton from '../Notification/NotificationButton/NotificationB
 import Button from '../Button/Button';
 import Icon from '../Icon/Icon';
 
-const Header = memo(({ currentUser }) => {
+const Header = memo(({ currentUser, token }) => {
   const [shouldMinimizeHeader, setShouldMinimizeHeader] = useState(false);
   const {
     location: { pathname },
@@ -45,7 +45,7 @@ const Header = memo(({ currentUser }) => {
             <h3 className="heading-logo">Instaclone</h3>
           </div>
         </Link>
-        <SearchBox />
+        <SearchBox token={token} />
         <div className="header__icons">
           {currentUser ? (
             <Fragment>

@@ -127,6 +127,7 @@ const ProfilePage = ({ currentUser, token, showModal, hideModal }) => {
                   <PreviewImage
                     onClick={() => handleClick(post._id)}
                     image={post.image}
+                    token={token}
                     likes={post.postVotes}
                     comments={post.comments}
                     filter={post.filter}

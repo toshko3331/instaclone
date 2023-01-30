@@ -68,7 +68,7 @@ const NotificationFeed = ({
             style: { minHeight: '7rem', padding: '1rem 1.5rem' },
           };
           let userCardChild = null;
-
+          
           switch (notification.notificationType) {
             case 'follow': {
               userCardProps.subText = 'started following you.';
@@ -87,7 +87,10 @@ const NotificationFeed = ({
               userCardChild = (
                 <Link to={`/post/${notification.notificationData.postId}`}>
                   <img
-                    src={notification.notificationData.image}
+                    src={process.env.REACT_APP_MEDIA_SERVER_ENDPOINT 
+                      + '/api/post/image/' + notification.notificationData.image
+                      + '?format=png&width=50&height=50&authorization=' 
+                      + token}
                     style={{
                       display: 'flex',
                       filter: notification.notificationData.filter,
@@ -112,7 +115,10 @@ const NotificationFeed = ({
               userCardChild = (
                 <Link to={`/post/${notification.notificationData.postId}`}>
                   <img
-                    src={notification.notificationData.image}
+                    src={process.env.REACT_APP_MEDIA_SERVER_ENDPOINT 
+                      + '/api/post/image/' + notification.notificationData.image
+                      + '?format=png&width=50&height=50&authorization=' 
+                      + token}
                     style={{
                       display: 'flex',
                       filter: notification.notificationData.filter,

@@ -145,6 +145,7 @@ const Comment = ({
           <Avatar
             size="4rem"
             imageSrc={author.avatar}
+            token={token}
             className="avatar--small"
           />
         </Link>

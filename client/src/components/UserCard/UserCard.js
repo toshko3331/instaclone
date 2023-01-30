@@ -19,6 +19,7 @@ const UserCard = ({
   onClick,
   children,
   avatarMedium,
+  token
 }) => {
   const avatarClassNames = classNames({
     'avatar--small': !avatarMedium,
@@ -29,6 +30,7 @@ const UserCard = ({
       {onClick ? (
         <Avatar
           onClick={() => onClick()}
+          token={token}
           className={avatarClassNames}
           imageSrc={avatar}
           style={{ cursor: 'pointer' }}
@@ -39,7 +41,7 @@ const UserCard = ({
           onClick={() => hideModal('OptionsDialog')}
           to={`/${username}`}
         >
-          <Avatar className={avatarClassNames} imageSrc={avatar} />
+          <Avatar className={avatarClassNames} token={token} imageSrc={avatar} />
         </Link>
       )}
       <div className="user-card__details">

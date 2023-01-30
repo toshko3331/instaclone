@@ -67,6 +67,7 @@ const HomePage = ({
                 <UserCard
                   avatar={currentUser.avatar}
                   username={currentUser.username}
+                  token={token}
                   subText={currentUser.fullName}
                   style={{ padding: '0' }}
                   avatarMedium

@@ -7,7 +7,7 @@ import { searchUsers } from '../../services/userService';
 import UsersListSkeleton from '../UsersList/UsersListSkeleton/UsersListSkeleton';
 import UserCard from '../UserCard/UserCard';
 
-const SearchSuggestion = ({ fetching, result, onClick, username }) => {
+const SearchSuggestion = ({ fetching, result, onClick, username, token }) => {
   const [additionalUsers, setAdditionalUsers] = useState([]);
   const [shouldFetch, setShouldFetch] = useState(false);
   const [fetchingAdditionalUsers, setFetchingAdditionalUsers] = useState(false);
@@ -46,6 +46,7 @@ const SearchSuggestion = ({ fetching, result, onClick, username }) => {
       <UserCard
         username={user.username}
         avatar={user.avatar}
+        token={token}
         subText={user.fullName}
         onClick={() => onClick(user)}
       />

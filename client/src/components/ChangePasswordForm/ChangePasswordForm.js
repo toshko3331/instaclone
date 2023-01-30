@@ -49,7 +49,7 @@ const ChangePasswordForm = ({ currentUser, token, showAlert }) => {
   return (
     <SettingsForm onSubmit={(event) => handleSubmit(event)}>
       <SettingsFormGroup>
-        <Avatar className="avatar--small" imageSrc={currentUser.avatar} />
+        <Avatar className="avatar--small" token={token} imageSrc={currentUser.avatar} />
         <h1 className="font-medium" style={{ fontSize: '2.5rem' }}>
           {currentUser.username}
         </h1>

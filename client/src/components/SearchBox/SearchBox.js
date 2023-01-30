@@ -9,7 +9,7 @@ import UserCard from '../UserCard/UserCard';
 import Divider from '../Divider/Divider';
 import Loader from '../Loader/Loader';
 
-const SearchBox = ({ style, setResult, onClick }) => {
+const SearchBox = ({ style, setResult, onClick, token }) => {
   const [query, setQuery] = useState('');
   const {
     handleSearchDebouncedRef,
@@ -65,6 +65,7 @@ const SearchBox = ({ style, setResult, onClick }) => {
                   avatar={user.avatar}
                   username={user.username}
                   subText={user.fullName}
+                  token={token}
                   style={{ padding: '1.5rem 1.5rem' }}
                   onClick={() => {
                     history.push(`/${user.username}`);

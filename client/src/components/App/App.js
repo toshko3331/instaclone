@@ -92,7 +92,7 @@ export function UnconnectedApp({
     }
     return (
       <Fragment>
-        {pathname !== '/login' && pathname !== '/signup' && <Header />}
+        {pathname !== '/login' && pathname !== '/signup' && <Header token={token}/>}
         {renderModals()}
         {transitions.map(
           ({ item, props, key }) =>

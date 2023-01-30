@@ -79,6 +79,7 @@ const EditProfileForm = ({
         <ChangeAvatarButton>
           <Avatar
             className="avatar--small"
+            token={token}
             imageSrc={currentUser.avatar}
             style={{ alignSelf: 'start' }}
           />

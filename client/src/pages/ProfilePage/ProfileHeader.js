@@ -67,6 +67,7 @@ const ProfileHeader = ({
                   ],
                   children: (
                     <UnfollowPrompt
+                      token={token}
                       avatar={data.user.avatar}
                       username={data.user.username}
                     />
@@ -94,12 +95,13 @@ const ProfileHeader = ({
       {currentUser && currentUser.username === username ? (
         <ChangeAvatarButton>
           <Avatar
+            token={token}
             className="profile-header__avatar"
             imageSrc={currentUser.avatar}
           />
         </ChangeAvatarButton>
       ) : (
-        <Avatar className="profile-header__avatar" imageSrc={avatar} />
+        <Avatar className="profile-header__avatar" token={token} imageSrc={avatar} />
       )}
 
       <div className="profile-header__info">

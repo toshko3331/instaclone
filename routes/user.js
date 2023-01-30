@@ -1,7 +1,7 @@
 const express = require('express');
 const userRouter = express.Router();
 const multer = require('multer');
-
+const path = require('path');
 const {
   retrieveUser,
   retrievePosts,
@@ -26,12 +26,24 @@ userRouter.get('/:userId/:offset/followers', requireAuth, retrieveFollowers);
 userRouter.get('/:username/:offset/search', searchUsers);
 
 userRouter.put('/confirm', requireAuth, confirmUser);
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.resolve(process.env.MEDIA_STORAGE_PATH))
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+    cb(null, (file.originalname.slice(0, 100)  + '-' + uniqueSuffix).replace(/\./g,'-').slice(0,150) 
+      + path.extname(file.originalname).slice(0,170))
+  }
+})
+
 userRouter.put(
   '/avatar',
   requireAuth,
   multer({
-    dest: 'temp/',
-    limits: { fieldSize: 8 * 1024 * 1024, fileSize: 1000000 },
+    storage: storage,
+    limits: { fieldSize: 8 * 8192 * 4320 , fileSize: 20000000 },
   }).single('image'),
   changeAvatar
 );

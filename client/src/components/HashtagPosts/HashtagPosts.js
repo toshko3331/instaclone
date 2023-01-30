@@ -105,8 +105,9 @@ const HashtagPosts = ({ token, showModal, showAlert }) => {
           posts.posts.map((post, idx) => (
             <PreviewImage
               key={idx}
-              image={post.thumbnail}
+              image={post.image}
               likes={post.postVotes}
+              token={token}
               comments={post.comments}
               filter={post.filter}
               onClick={() => handleClick(post._id, post.avatar)}

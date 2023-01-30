@@ -3,9 +3,12 @@ import PropTypes from 'prop-types';
 
 import Icon from '../Icon/Icon';
 
-const PreviewImage = ({ onClick, image, likes, comments, filter }) => (
+const PreviewImage = ({ onClick, image, likes, comments, filter, token }) => (
   <figure onClick={onClick} key={image} className="preview-image">
-    <img src={image} alt="User post" style={{ filter }} />
+    <img src={process.env.REACT_APP_MEDIA_SERVER_ENDPOINT 
+        + '/api/post/image/' + image
+        + '?format=png&width=400&height=400&authorization=' 
+        + token} alt="User post" style={{ filter }} />
     <div className="preview-image__overlay">
       <span className="preview-image__content">
         {likes > 0 && (

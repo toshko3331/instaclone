@@ -87,6 +87,7 @@ const NewPostForm = ({
               <Avatar
                 size="3rem"
                 className="avatar--small"
+                token={token}
                 imageSrc={
                   currentUser.avatar
                     ? currentUser.avatar

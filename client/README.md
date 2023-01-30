@@ -1,3 +1,11 @@
+## ENV
+> Set up required environment variables
+
+```javascript
+REACT_APP_IMAGE_SERVER_ENDPOINT= // Point it to the server endpoint unless you're running your own image server endpoint.
+```
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

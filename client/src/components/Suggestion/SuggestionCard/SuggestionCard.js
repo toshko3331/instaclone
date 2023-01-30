@@ -3,13 +3,14 @@ import { useHistory } from 'react-router-dom';
 
 import Avatar from '../../Avatar/Avatar';
 
-const SuggestionCard = ({ avatar, username, fullName, posts, children }) => {
+const SuggestionCard = ({ avatar, username, fullName, posts, token, children }) => {
   const history = useHistory();
 
   return (
     <div className="suggestion-card">
       <Avatar
         onClick={() => history.push('/' + username)}
+        token={token}
         className="avatar--large mb-sm"
         imageSrc={avatar}
       />
@@ -20,7 +21,10 @@ const SuggestionCard = ({ avatar, username, fullName, posts, children }) => {
           posts.map((post, idx) => (
             <figure className="suggestion-card__image-container" key={idx}>
               <img
-                src={post.thumbnail}
+                src={process.env.REACT_APP_MEDIA_SERVER_ENDPOINT 
+                  + '/api/post/image/' + post.image
+                  + '?format=png&width=50&height=50&authorization=' 
+                  + token}
                 alt="User post"
                 style={{ filter: post.filter }}
               />

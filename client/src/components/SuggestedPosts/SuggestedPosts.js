@@ -88,6 +88,7 @@ const SuggestedPosts = ({ token, showModal, showAlert }) => {
       >
         <SearchBox
           style={{ gridColumn: `${search ? '1 / span 2' : '1 / -1'}` }}
+          token={token}
           setResult={setResult}
           onClick={() => setSearch(true)}
         />
@@ -103,6 +104,7 @@ const SuggestedPosts = ({ token, showModal, showAlert }) => {
             <UserCard
               avatar={user.avatar}
               username={user.username}
+              token={token}
               subText={user.fullName}
             />
           ))}
@@ -113,8 +115,9 @@ const SuggestedPosts = ({ token, showModal, showAlert }) => {
             posts.posts.map((post, idx) => (
               <PreviewImage
                 key={idx}
-                image={post.thumbnail}
+                image={post.image}
                 likes={post.postVotes}
+                token={token}
                 comments={post.comments}
                 filter={post.filter}
                 onClick={() => handleClick(post._id, post.avatar)}

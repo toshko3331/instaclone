@@ -101,6 +101,7 @@ const UsersList = ({
             key={idx}
             avatar={user.avatar}
             username={user.username}
+            token={token}
             subText={user.fullName}
             userId={user._id}
             following={user.isFollowing}

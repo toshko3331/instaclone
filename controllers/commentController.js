@@ -7,7 +7,6 @@ const ObjectId = require('mongoose').Types.ObjectId;
 
 const {
   retrieveComments,
-  formatCloudinaryUrl,
   sendCommentNotification,
   sendMentionNotification,
 } = require('../utils/controllerUtils');
@@ -50,16 +49,11 @@ module.exports.createComment = async (req, res, next) => {
 
   try {
     // Sending comment notification
-    let image = formatCloudinaryUrl(
-      post.image,
-      { height: 50, width: 50, x: '100%', y: '100%' },
-      true
-    );
     sendCommentNotification(
       req,
       user,
       post.author,
-      image,
+      post.image,
       post.filter,
       message,
       post._id
@@ -67,14 +61,9 @@ module.exports.createComment = async (req, res, next) => {
 
     // Find the username of the post author
     const postDocument = await Post.findById(post._id).populate('author');
-    image = formatCloudinaryUrl(
-      post.image,
-      { height: 50, width: 50, x: '100%', y: '100%' },
-      true
-    );
 
     // Sending a mention notification
-    sendMentionNotification(req, message, image, postDocument, user);
+    sendMentionNotification(req, message, post.image, postDocument, user);
   } catch (err) {
     console.log(err);
   }
@@ -189,22 +178,12 @@ module.exports.createCommentReply = async (req, res, next) => {
     const postDocument = await Post.findById(
       parentCommentDocument.post
     ).populate('author');
-    const image = formatCloudinaryUrl(
-      postDocument.image,
-      {
-        height: 50,
-        width: 50,
-        x: '100%',
-        y: '100%',
-      },
-      true
-    );
 
     sendCommentNotification(
       req,
       user,
       postDocument.author._id,
-      image,
+      post.image,
       postDocument.filter,
       message,
       postDocument._id

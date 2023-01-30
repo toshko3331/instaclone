@@ -48,6 +48,20 @@ module.exports.requireAuth = async (req, res, next) => {
   }
 };
 
+module.exports.requireMediaAuth = async (req, res, next) => {
+  const { authorization } = req.query;
+  if (!authorization) return res.status(401).send({ error: 'Not authorized.' });
+  try { 
+    const user = await this.verifyJwt(authorization);
+    // Allow other middlewares to access the authenticated user details.
+    res.locals.user = user;
+    return next();
+  } catch (err) {
+    return res.status(401).send({ error: err });
+  }
+};
+
+
 module.exports.optionalAuth = async (req, res, next) => {
   const { authorization } = req.headers;
   if (authorization) {

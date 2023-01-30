@@ -6,8 +6,6 @@ const ConfirmationToken = require('../models/ConfirmationToken');
 const Notification = require('../models/Notification');
 const socketHandler = require('../handlers/socketHandler');
 const ObjectId = require('mongoose').Types.ObjectId;
-const cloudinary = require('cloudinary').v2;
-const fs = require('fs');
 const crypto = require('crypto');
 
 const {
@@ -68,9 +66,6 @@ module.exports.retrieveUser = async (req, res, next) => {
               $unwind: '$postvotes',
             },
             {
-              $addFields: { image: '$thumbnail' },
-            },
-            {
               $project: {
                 user: true,
                 followers: true,
@@ -79,7 +74,6 @@ module.exports.retrieveUser = async (req, res, next) => {
                   $sum: [{ $size: '$comments' }, { $size: '$commentReplies' }],
                 },
                 image: true,
-                thumbnail: true,
                 filter: true,
                 caption: true,
                 author: true,
@@ -500,31 +494,17 @@ module.exports.changeAvatar = async (req, res, next) => {
       .send({ error: 'Please provide the image to upload.' });
   }
 
-  cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET,
-  });
-
   try {
-    const response = await cloudinary.uploader.upload(req.file.path, {
-      width: 200,
-      height: 200,
-      gravity: 'face',
-      crop: 'thumb',
-    });
-    fs.unlinkSync(req.file.path);
-
     const avatarUpdate = await User.updateOne(
       { _id: user._id },
-      { avatar: response.secure_url }
+      { avatar: req.file.filename }
     );
 
     if (!avatarUpdate.nModified) {
       throw new Error('Could not update user avatar.');
     }
 
-    return res.send({ avatar: response.secure_url });
+    return res.send({ avatar: req.file.filename });
   } catch (err) {
     next(err);
   }

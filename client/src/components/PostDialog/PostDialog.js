@@ -126,7 +126,10 @@ const PostDialog = ({
             <SkeletonLoader animated />
           ) : (
             <img
-              src={state.data.image}
+              src={process.env.REACT_APP_MEDIA_SERVER_ENDPOINT 
+               + '/api/post/image/' + state.data.image
+               + '?format=png&authorization=' 
+               + token}
               alt="Post"
               style={{ filter: state.data.filter }}
             />
@@ -149,6 +152,7 @@ const PostDialog = ({
             >
               <Avatar
                 className="avatar--small"
+                token={token}
                 imageSrc={state.data.author.avatar}
               />
             </Link>
