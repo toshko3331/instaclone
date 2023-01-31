@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import { getPostFilters } from '../../services/postService';
-
+import { generateVideoThumbnails } from '@rajesh896/video-thumbnails-generator';
 import NewPostForm from './NewPostForm/NewPostForm';
 import NewPostFilter from './NewPostFilter/NewPostFilter';
 import MobileHeader from '../Header/MobileHeader/MobileHeader';
@@ -16,10 +16,24 @@ const NewPost = ({ file, hide }) => {
     filterName: '',
   });
   const [activeSection, setActiveSection] = useState('filter');
+  const [postType, setPostType] = useState('image');
   const [filters, setFilters] = useState([]);
 
   // Load a preview image of the image to post
   useEffect(() => {
+    if(file.type.split('/')[0] === 'video') {
+      generateVideoThumbnails(file, 1).then((thumbnailArray) => {
+        setPreviewImage((previous) => ({
+          ...previous,
+          src: thumbnailArray[0],
+        }));
+      }).catch((err) => {
+          console.error(err);
+      })
+      setActiveSection('details');
+      setPostType('video');
+    }
+
     if (file.type === 'image/png' || file.type === 'image/jpeg') {
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -28,6 +42,7 @@ const NewPost = ({ file, hide }) => {
           ...previous,
           src: event.target.result,
         }));
+        setPostType('image');
       };
     } else {
       // Display error
@@ -59,6 +74,7 @@ const NewPost = ({ file, hide }) => {
             previewImage={previewImage}
             back={() => setActiveSection('filter')}
             hide={() => hide()}
+            postType={postType}
           />
         );
       }

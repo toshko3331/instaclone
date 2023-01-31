@@ -27,6 +27,7 @@ const NewPostForm = ({
   back,
   showAlert,
   addPost,
+  postType
 }) => {
   const [caption, setCaption] = useState('');
   const [loading, setLoading] = useState(false);
@@ -62,11 +63,18 @@ const NewPostForm = ({
     <Fragment>
       {loading && <Loader />}
       <MobileHeader show>
+        {postType === 'image' ?
         <Icon
-          icon="chevron-back"
-          onClick={() => back()}
+        icon="chevron-back"
+        onClick={() => back()}
+        style={{ cursor: 'pointer' }}
+        /> : //Either an image or a video.
+        <Icon
+          icon="close-outline"
+          onClick={() => hide()}
           style={{ cursor: 'pointer' }}
-        />
+        /> }
+        
         <h3 className="heading-3">New Post</h3>
         <TextButton
           bold
