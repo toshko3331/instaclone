@@ -7,9 +7,11 @@ import axios from 'axios';
  * @param {string} postId Id of the post to fetch
  * @returns {object} The post requested
  */
-export const getPost = async (postId) => {
+export const getPost = async (postId, authToken) => {
   try {
-    const response = await axios.get(`/api/post/${postId}`);
+    const response = await axios.get(`/api/post/${postId}`, {
+      headers: { authorization: authToken },
+    });
     return response.data;
   } catch (err) {
     throw new Error(err.response.data.error);
@@ -21,9 +23,11 @@ export const getPost = async (postId) => {
  * @param {string} username A users username
  * @param {number} offset The amount of posts to skip
  */
-export const getPosts = async (username, offset = 0) => {
+export const getPosts = async (username, offset = 0, authToken) => {
   try {
-    const response = await axios.get(`/api/user/${username}/posts/${offset}`);
+    const response = await axios.get(`/api/user/${username}/posts/${offset}`, {
+      headers: { authorization: authToken },
+    });
     return response.data;
   } catch (err) {
     throw new Error(err.response.data.error);

@@ -85,7 +85,8 @@ const Comment = ({
       try {
         const replies = await getCommentReplies(
           comment._id,
-          commentReplies.length > 0 ? commentReplies.length : 0
+          commentReplies.length > 0 ? commentReplies.length : 0,
+          token
         );
         dialogDispatch({
           type: 'ADD_COMMENT_REPLY',

@@ -43,7 +43,7 @@ const NewPostButton = ({ showModal, hideModal, plusIcon, children, style }) => {
         id="file-upload"
         type="file"
         style={{ display: 'none' }}
-        accept="image/*"
+        accept="video/*;capture=camcorder,image/*;capture=camera"
         // Get the first selected file
         onChange={(event) => setFile(event.target.files[0])}
         ref={fileInputRef}

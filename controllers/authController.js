@@ -134,6 +134,8 @@ module.exports.loginAuthentication = async (req, res, next) => {
 };
 
 module.exports.register = async (req, res, next) => {
+
+  return res.status(400).send({error: 'Registrations have been disabled.'});
   const { username, fullName, email, password } = req.body;
   let user = null;
   let confirmationToken = null;
@@ -172,6 +174,7 @@ module.exports.register = async (req, res, next) => {
 };
 
 module.exports.githubLoginAuthentication = async (req, res, next) => {
+  return res.status(400).send({error: 'Github OAuth is disabled.'});
   const { code, state } = req.body;
   if (!code || !state) {
     return res

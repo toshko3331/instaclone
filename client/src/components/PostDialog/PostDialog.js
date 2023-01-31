@@ -1,4 +1,5 @@
 import React, { useEffect, useReducer, Fragment, useRef } from 'react';
+import ReactPlayer from 'react-player'
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
@@ -55,7 +56,7 @@ const PostDialog = ({
         );
         (async function () {
           try {
-            const response = await getPost(postId);
+            const response = await getPost(postId, token);
             dispatch({ type: 'FETCH_POST_SUCCESS', payload: response });
           } catch (err) {
             history.push('/');
@@ -81,7 +82,8 @@ const PostDialog = ({
       const commentData = await getComments(
         postId,
         state.data.comments.length,
-        state.localStateComments.size
+        state.localStateComments.size,
+        token
       );
       dispatch({ type: 'ADD_COMMENT', payload: commentData.comments });
     } catch (err) {
@@ -125,14 +127,26 @@ const PostDialog = ({
           {fetching ? (
             <SkeletonLoader animated />
           ) : (
-            <img
-              src={process.env.REACT_APP_MEDIA_SERVER_ENDPOINT 
-               + '/api/post/image/' + state.data.image
-               + '?format=png&authorization=' 
-               + token}
-              alt="Post"
-              style={{ filter: state.data.filter }}
-            />
+            <>
+              { state.data.type == 'image' ?
+                (<img
+                  src={process.env.REACT_APP_MEDIA_SERVER_ENDPOINT 
+                   + '/api/post/image/' + state.data.image
+                   + '?format=png&authorization=' 
+                   + token}
+                  alt="Post"
+                  style={{ filter: state.data.filter }}
+                />) : (
+                  <ReactPlayer url={process.env.REACT_APP_MEDIA_SERVER_ENDPOINT 
+                    + '/api/post/image/' + state.data.image
+                    + '?authorization=' 
+                    + token} muted={true} playsinline={true} loop={true} controls={true} width="100%" height="100%"
+                    light={process.env.REACT_APP_MEDIA_SERVER_ENDPOINT 
+                      + '/api/post/image/' + state.data.thumbnail
+                      + '?authorization=' 
+                      + token}/>)
+              }
+            </>
           )}
         </div>
         <header

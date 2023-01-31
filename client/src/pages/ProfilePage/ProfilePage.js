@@ -67,7 +67,7 @@ const ProfilePage = ({ currentUser, token, showModal, hideModal }) => {
     ) {
       try {
         dispatch({ type: 'FETCH_ADDITIONAL_POSTS_START' });
-        const posts = await getPosts(username, state.data.posts.length);
+        const posts = await getPosts(username, state.data.posts.length,token);
         dispatch({ type: 'FETCH_ADDITIONAL_POSTS_SUCCESS' });
         dispatch({ type: 'ADD_POSTS', payload: posts });
       } catch (err) {
@@ -126,7 +126,7 @@ const ProfilePage = ({ currentUser, token, showModal, hideModal }) => {
                 return (
                   <PreviewImage
                     onClick={() => handleClick(post._id)}
-                    image={post.image}
+                    image={post.type =='image' ? post.image : post.thumbnail}
                     token={token}
                     likes={post.postVotes}
                     comments={post.comments}

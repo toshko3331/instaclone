@@ -36,6 +36,7 @@
     "express": "^4.17.1",
     "express-image-server-fixed": "^1.0.4",
     "express-rate-limit": "^5.1.1",
+    "ffmpeg": "^0.0.4",
     "handlebars": "^4.7.6",
     "helmet": "^3.21.2",
     "jwt-simple": "^0.5.6",

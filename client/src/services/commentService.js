@@ -129,11 +129,13 @@ export const voteCommentReply = async (commentReplyId, authToken) => {
  * @param {number} offset A number to offset the results
  * @returns {array} Array of replies
  */
-export const getCommentReplies = async (parentCommentId, offset = 0) => {
+export const getCommentReplies = async (parentCommentId, offset = 0, authToken) => {
   try {
     const response = await axios.get(
       `/api/comment/${parentCommentId}/${offset}/replies`
-    );
+    , {
+      headers: { authorization: authToken },
+    });
     return response.data;
   } catch (err) {
     throw new Error(err);
@@ -148,10 +150,13 @@ export const getCommentReplies = async (parentCommentId, offset = 0) => {
  * @param {number} exclude The amount of comments to exlude (newest to oldest)
  * @returns {object} Object of comment details
  */
-export const getComments = async (postId, offset, exclude = 0) => {
+export const getComments = async (postId, offset, exclude = 0, authToken) => {
   try {
     const response = await axios.get(
-      `/api/comment/${postId}/${offset}/${exclude}`
+      `/api/comment/${postId}/${offset}/${exclude}`,
+      {
+        headers: { authorization: authToken },
+      },
     );
     return response.data;
   } catch (err) {

@@ -105,7 +105,7 @@ const HashtagPosts = ({ token, showModal, showAlert }) => {
           posts.posts.map((post, idx) => (
             <PreviewImage
               key={idx}
-              image={post.image}
+              image={post.type =='image' ? post.image : post.thumbnail}
               likes={post.postVotes}
               token={token}
               comments={post.comments}
