@@ -183,13 +183,13 @@ module.exports.createCommentReply = async (req, res, next) => {
       req,
       user,
       postDocument.author._id,
-      post.image,
+      postDocument.image,
       postDocument.filter,
       message,
       postDocument._id
     );
-
-    sendMentionNotification(req, message, image, postDocument, user);
+    
+    sendMentionNotification(req, message, postDocument.image, postDocument, user);
   } catch (err) {
     console.log(err);
   }

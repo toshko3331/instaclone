@@ -19,11 +19,11 @@ const {
 const { requireAuth, optionalAuth } = require('../controllers/authController');
 
 userRouter.get('/suggested/:max?', requireAuth, retrieveSuggestedUsers);
-userRouter.get('/:username', optionalAuth, retrieveUser);
-userRouter.get('/:username/posts/:offset', retrievePosts);
+userRouter.get('/:username', requireAuth, retrieveUser);
+userRouter.get('/:username/posts/:offset', requireAuth, retrievePosts);
 userRouter.get('/:userId/:offset/following', requireAuth, retrieveFollowing);
 userRouter.get('/:userId/:offset/followers', requireAuth, retrieveFollowers);
-userRouter.get('/:username/:offset/search', searchUsers);
+userRouter.get('/:username/:offset/search', requireAuth, searchUsers);
 
 userRouter.put('/confirm', requireAuth, confirmUser);
 

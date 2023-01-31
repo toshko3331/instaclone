@@ -77,6 +77,8 @@ module.exports.retrieveUser = async (req, res, next) => {
                 filter: true,
                 caption: true,
                 author: true,
+                thumbnail: true,
+                type: true,
                 postVotes: { $size: '$postvotes.votes' },
               },
             },

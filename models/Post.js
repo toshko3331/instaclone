@@ -4,6 +4,11 @@ const Schema = mongoose.Schema;
 const PostSchema = new Schema({
   image: String,
   filter: String,
+  thumbnail: String,
+  type: {
+    type: String,
+    enum: ['video', 'image',],
+  },
   caption: String,
   hashtags: [
     {

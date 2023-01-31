@@ -8,7 +8,7 @@ const storage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-    cb(null, (file.originalname.slice(0, 100)  + '-' + uniqueSuffix).slice(0,150) 
+    cb(null, (file.originalname.slice(0, 100)  + '-' + uniqueSuffix).replace(/\./g,'-').slice(0,150) 
       + path.extname(file.originalname).slice(0,170))
   }
 })
@@ -49,7 +49,7 @@ postRouter.get('/suggested/:offset', requireAuth, retrieveSuggestedPosts);
 postRouter.get('/filters', (req, res) => {
   res.send({ filters });
 });
-postRouter.get('/:postId', retrievePost);
+postRouter.get('/:postId', requireAuth, retrievePost);
 postRouter.get('/feed/:offset', requireAuth, retrievePostFeed);
 postRouter.get('/hashtag/:hashtag/:offset', requireAuth, retrieveHashtagPosts);
 

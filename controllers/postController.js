@@ -3,6 +3,7 @@ const axios = require('axios');
 const eis = require('express-image-server-fixed');
 const fs = require('fs');
 const path = require('path');
+const ffmpeg = require('ffmpeg');
 require('linkifyjs/plugins/hashtag')(linkify);
 const Post = require('../models/Post');
 const PostVote = require('../models/PostVote');
@@ -20,6 +21,8 @@ const filters = require('../utils/filters');
 
 module.exports.createPost = async (req, res, next) => {
   const user = res.locals.user;
+  const postType = req.file.mimetype.split("/")[0];
+  
   const { caption, filter: filterName } = req.body;
   let post = undefined;
   const filterObject = filters.find((filter) => filter.name === filterName);
@@ -29,20 +32,55 @@ module.exports.createPost = async (req, res, next) => {
       hashtags.push(result.value.substring(1));
     }
   });
+  if(postType != 'image' && postType != 'video' ){
+    return res
+      .status(400)
+      .send({ error: 'Please provide an image or a video.' });
+  }
 
   if (!req.file) {
     return res
       .status(400)
       .send({ error: 'Please provide the image to upload.' });
   }
-
+  console.log(req.file)
+  let fileNameBreakout = req.file.filename.split(/\.(?=[^\.]+$)/);
+  let filename = fileNameBreakout[0];
+  let extension = fileNameBreakout[1];
+  let thumbnailName = filename + '-thumb-' + extension + '.jpg';
+  console.log("filenameL:" + filename + '-thumb' + extension)
+  if(postType == 'video'){
+    try {
+      const video = await new ffmpeg(req.file.path);
+      
+      video.addCommand('-ss', '00:00:00')
+      video.addCommand('-vframes', '1')
+      video.save(path.resolve(process.env.MEDIA_STORAGE_PATH) + '\\' + thumbnailName,  function (error, file) {
+        if (!error)
+          console.log('Video file: ' + file);
+      })
+      /*video.fnExtractFrameToJPG(path.resolve(process.env.MEDIA_STORAGE_PATH), {
+        frame_rate: 1,
+        number: 1,
+        keep_pixel_aspect_ratio : true,
+        keep_aspect_ratio: true,
+        file_name : filename + '-thumb' + '.'+ extension
+    }, null);*/
+    } catch (e) {
+      console.log(e.code);
+      console.log(e.msg);
+    }
+  }
+  
   try {
     post = new Post({
       image: req.file.filename,
       filter: filterObject ? filterObject.filter : '',
-      caption,
+      thumbnail: thumbnailName,
+      type: postType == 'image' ? 'image' : 'video',
+      caption: caption,
       author: user._id,
-      hashtags,
+      hashtags: hashtags,
     });
     const postVote = new PostVote({
       post: post._id,
